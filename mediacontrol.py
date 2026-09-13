@@ -12,8 +12,6 @@ import subprocess
 wCam, hCam = 640, 480
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-cap.set(3, wCam)
-cap.set(4, hCam)
 
 if not cap.isOpened():
     cap = cv2.VideoCapture(0)
@@ -21,13 +19,13 @@ if not cap.isOpened():
     cap.set(4, hCam)
 
 if not cap.isOpened():
-    print("❌ Could not open webcam.")
+    print("Could not open webcam.")
     exit()
 
 print("Warming up camera...")
 for _ in range(10):
     cap.read()
-print("✅ Camera ready! Press Q to quit.")
+print("Camera ready! Press Q to quit.")
 
 # ═══════════════════════════════════════════════════════════
 #  DETECTOR + PYAUTOGUI
@@ -54,9 +52,9 @@ CLOSE_COOLDOWN      = 2.0    # seconds before close can fire again
 APP_MAP = {
     1: ("Browser",    "Brave.exe"),
     2: ("Notepad",    "notepad.exe"),
-    3: ("Calculator", "calc.exe"),
+    3: ("vscode", "vscode.exe"),
     4: ("Explorer",   "explorer.exe"),
-    5: ("Spotify",    "spotify.exe"),
+    5: ("whatsapp",    "whatsapps.exe"),
 }
 
 # ═══════════════════════════════════════════════════════════
@@ -128,16 +126,16 @@ def launch_app(app_key):
         name, exe = APP_MAP[app_key]
         try:
             subprocess.Popen(f"start {exe}", shell=True)
-            print(f"🚀 Launched: {name}")
+            print(f" Launched: {name}")
             return True
         except Exception as e:
-            print(f"❌ Failed to launch {name}: {e}")
+            print(f" Failed to launch {name}: {e}")
     return False
 
 
 def close_active_app():
     pyautogui.hotkey('alt', 'f4')
-    print("❌ Closed active window")
+    print(" Closed active window")
 
 
 # ═══════════════════════════════════════════════════════════
@@ -182,7 +180,7 @@ while True:
         #  TWO-HAND CLOSE GESTURE (check FIRST, before others)
         # ═══════════════════════════════════════════════════
         both_fists = (right_lm is not None and left_lm is not None
-                      and ext_r == 0 and ext_l == 0)
+                and ext_r == 0 and ext_l == 0)
 
         now = time.time()
         can_close = (now - close_last_fire) > CLOSE_COOLDOWN
@@ -258,7 +256,7 @@ while True:
             if right_mode == "PLAY_PAUSE":
                 if last_oneshot != "PLAY_PAUSE":
                     pyautogui.press('playpause')
-                    print("⏯️  Play/Pause FIRED")
+                    print("Play/Pause FIRED")
                     last_oneshot = "PLAY_PAUSE"
                     release_counter = 0
                 cv2.putText(img, "PLAY / PAUSE", (170, 200),
@@ -267,7 +265,7 @@ while True:
             elif right_mode == "MUTE":
                 if last_oneshot != "MUTE":
                     pyautogui.press('volumemute')
-                    print("🔇 Mute FIRED")
+                    print("Mute FIRED")
                     last_oneshot = "MUTE"
                     release_counter = 0
                 cv2.putText(img, "MUTE", (260, 200),
@@ -275,27 +273,27 @@ while True:
 
             elif right_mode == "SKIP_FWD" and can_fire():
                 pyautogui.press('right')
-                print("⏩ Skip Forward")
+                print("Skip Forward")
                 cv2.arrowedLine(img, (300, 200), (440, 200),
                                 (0, 255, 0), 8, tipLength=0.4)
 
             elif right_mode == "SKIP_BACK" and can_fire():
                 pyautogui.press('left')
-                print("⏪ Skip Backward")
+                print("Skip Backward")
                 cv2.arrowedLine(img, (300, 200), (160, 200),
                                 (0, 255, 0), 8, tipLength=0.4)
 
             elif right_mode == "VOL_UP" and can_fire():
                 for _ in range(3):
                     pyautogui.press('volumeup')
-                print("🔊 Volume Up")
+                print(" Volume Up")
                 cv2.putText(img, "VOLUME UP", (200, 200),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 100), 3)
 
             elif right_mode == "VOL_DOWN" and can_fire():
                 for _ in range(3):
                     pyautogui.press('volumedown')
-                print("🔉 Volume Down")
+                print("Volume Down")
                 cv2.putText(img, "VOLUME DOWN", (170, 200),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (100, 100, 255), 3)
 
@@ -303,7 +301,7 @@ while True:
                 for _ in range(SEEK_REPEATS):
                     pyautogui.press('right')
                     time.sleep(0.03)
-                print("⏩ Seek forward")
+                print("Seek forward")
 
             cv2.circle(img, (index[1], index[2]), 10, (0, 255, 255), cv2.FILLED)
 
@@ -344,14 +342,14 @@ while True:
                                 1, (0, 255, 255), 3)
 
             cv2.circle(img, (index_l[1], index_l[2]), 10, (255, 0, 255),
-                       cv2.FILLED)
+                    cv2.FILLED)
             cv2.putText(img, f"L: raw={total} maj={majority} count={left_count} stable={left_stable}",
                         (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.45,
                         (255, 200, 0), 2)
 
             if DEBUG:
                 print(f"L: raw={total}  majority={majority}  stable={left_stable}  "
-                      f"count={left_count}  fired={left_fired}")
+                    f"count={left_count}  fired={left_fired}")
 
         elif not left_lm:
             left_history.clear()
@@ -394,7 +392,7 @@ while True:
             break
 
     except Exception as e:
-        print(f"⚠️ Loop error: {e}")
+        print(f" Loop error: {e}")
         continue
 
 cap.release()
